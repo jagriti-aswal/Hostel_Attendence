@@ -1,0 +1,55 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python virtual environment
+backend/face-service/venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Dataset (optional if large)
+backend/face-service/dataset/
+
+# Pickle files (recommended)
+*.pkl
+
+# Node modules
+node_modules/
+
+# Environment variables
+.env
+
+
+venv/
+ml/venv/
+node_modules/
+__pycache__/
+*.pyc
+.env
+
+.env
+backend/.env
