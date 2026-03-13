@@ -85,11 +85,15 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
    SERVE VITE FRONTEND
 ========================== */
 
+/* ==========================
+   SERVE VITE FRONTEND
+========================== */
+
 const distPath = path.join(__dirname, "../dist");
 
 app.use(express.static(distPath));
 
-app.get("/*", (req, res) => {
+app.use((req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
 
