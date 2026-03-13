@@ -3,11 +3,17 @@ import fs from "fs";
 import User from "../models/User.js";
 import Attendance from "../models/Attendance.js";
 import geolib from "geolib";
+// const hostelBoundary = [
+//   { latitude: 29.94520, longitude: 76.81420 },
+//   { latitude: 29.94520, longitude: 76.81510 },
+//   { latitude: 29.94460, longitude: 76.81510 },
+//   { latitude: 29.94460, longitude: 76.81420 }
+// ];
 const hostelBoundary = [
-  { latitude: 29.94520, longitude: 76.81420 },
-  { latitude: 29.94520, longitude: 76.81510 },
-  { latitude: 29.94460, longitude: 76.81510 },
-  { latitude: 29.94460, longitude: 76.81420 }
+  { latitude: 29.94820, longitude: 76.81280 }, // NW corner
+  { latitude: 29.94820, longitude: 76.81950 }, // NE corner
+  { latitude: 29.94370, longitude: 76.81950 }, // SE corner
+  { latitude: 29.94370, longitude: 76.81280 }  // SW corner
 ];
 const COLLEGE_LAT = 29.94510901968636;
 const COLLEGE_LON = 76.81464359926188;

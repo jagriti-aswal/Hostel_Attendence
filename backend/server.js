@@ -1,8 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-
-dotenv.config();
-
 import cors from "cors";
 import path from "path";
 
@@ -12,15 +9,23 @@ import adminRoutes from "./src/routes/adminRoutes.js";
 import faceAuthRoutes from "./src/routes/faceAuth.routes.js";
 import uploadRoutes from "./src/routes/uploadRoutes.js";
 
+import networkLock from "./networkLock.js";
+
+dotenv.config();
 
 const app = express();
-app.use("/api", uploadRoutes);
+
+// ==========================
+// DEPLOY / PROXY SAFE
+// ==========================
+app.set("trust proxy", true);
+
 // ==========================
 // CORS
 // ==========================
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: true, // works for localhost + deployed frontend
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -39,8 +44,21 @@ connectDB();
 console.log("🔥 SERVER FILE LOADED");
 
 // ==========================
+// 🔐 NETWORK LOCK (LOGIN ONLY)
+// ==========================
+app.use("/api/auth/login", (req, res, next) => {
+  console.log("✅ login middleware reached");
+  next();
+});
+
+app.use("/api/auth/login", networkLock);
+
+// ==========================
 // ROUTES
 // ==========================
+
+// Upload routes
+app.use("/api", uploadRoutes);
 
 // Auth routes
 app.use("/api/auth", authRoutes);
@@ -48,7 +66,7 @@ app.use("/api/auth", authRoutes);
 // Admin routes
 app.use("/api/admin", adminRoutes);
 
-// ✅ Face attendance route (IMPORTANT CHANGE)
+// Face attendance routes
 app.use("/api", faceAuthRoutes);
 
 // ==========================
@@ -57,7 +75,7 @@ app.use("/api", faceAuthRoutes);
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // ==========================
-// TEST ROUTE (Optional Debug)
+// TEST ROUTE
 // ==========================
 app.get("/api/test", (req, res) => {
   res.json({ message: "Server working" });
@@ -68,6 +86,6 @@ app.get("/api/test", (req, res) => {
 // ==========================
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
