@@ -102,7 +102,7 @@ const StudentDashboard: React.FC = () => {
       setIsVerifying(true);
 
       const res = await fetch(
-        "https://hostel-attendence-tg6k.onrender.com//api/face-attendance",
+        "https://https://hostel-attendence-tg6k.onrender.com/api/face-attendance",
         {
           method: "POST",
           headers: {
