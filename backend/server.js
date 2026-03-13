@@ -70,23 +70,15 @@ app.use("/api/auth/login", networkLock);
    ROUTES
 ========================== */
 
-// Upload routes
 app.use("/api", uploadRoutes);
-
-// Auth routes
 app.use("/api/auth", authRoutes);
-
-// Admin routes
 app.use("/api/admin", adminRoutes);
-
-// Face attendance routes
 app.use("/api", faceAuthRoutes);
 
 /* ==========================
    STATIC FILES
 ========================== */
 
-// Uploaded photos
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 /* ==========================
@@ -97,7 +89,6 @@ const distPath = path.join(__dirname, "../dist");
 
 app.use(express.static(distPath));
 
-// SPA fallback (important for React routes like /dashboard)
 app.get("*", (req, res) => {
   res.sendFile(path.join(distPath, "index.html"));
 });
