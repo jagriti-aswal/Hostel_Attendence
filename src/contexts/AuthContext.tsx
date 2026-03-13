@@ -239,7 +239,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     type: "student" | "admin"
   ): Promise<boolean> => {
     try {
-      const res = await axios.post("https://hostel-attendence-tg6k.onrender.com//api/auth/login", {
+      const res = await axios.post("https://hostel-attendence-tg6k.onrender.com/api/auth/login", {
         email,
         password,
       });
