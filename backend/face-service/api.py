@@ -63,35 +63,35 @@
 #         data.username,
 #         data.image
 #     )
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from face_auth import verify_face_from_base64
+# from fastapi import FastAPI
+# from fastapi.middleware.cors import CORSMiddleware
+# from pydantic import BaseModel
+# from face_auth import verify_face_from_base64
 
-app = FastAPI()
+# app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["*"],
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 
-class FaceLoginRequest(BaseModel):
-    # username: str
-    # image: str
-    stored_image: str
-    live_image: str
+# class FaceLoginRequest(BaseModel):
+#     # username: str
+#     # image: str
+#     stored_image: str
+#     live_image: str
 
+
+# # @app.post("/face/login")
+# # def face_login(data: FaceLoginRequest):
+# #     return verify_face_from_base64(data.username, data.image)
 
 # @app.post("/face/login")
 # def face_login(data: FaceLoginRequest):
-#     return verify_face_from_base64(data.username, data.image)
-
-@app.post("/face/login")
-def face_login(data: FaceLoginRequest):
-    return verify_face_from_base64(
-        data.stored_image,
-        data.live_image
-    )
+#     return verify_face_from_base64(
+#         data.stored_image,
+#         data.live_image
+#     )
