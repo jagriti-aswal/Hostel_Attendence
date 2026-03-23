@@ -1,5 +1,15 @@
-fastapi
-uvicorn
-deepface
-opencv-python
+# fastapi
+# uvicorn
+# deepface
+# opencv-python
+# numpy
+
+flask
+gunicorn
+deepface==0.0.93
+opencv-python-headless
 numpy
+pillow
+requests
+tensorflow==2.10.1
+keras==2.10.0
