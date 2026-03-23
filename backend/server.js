@@ -1,10 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
-
-dotenv.config();
-
 import cors from "cors";
 import path from "path";
+import { fileURLToPath } from "url";
 
 import connectDB from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
@@ -12,62 +10,99 @@ import adminRoutes from "./src/routes/adminRoutes.js";
 import faceAuthRoutes from "./src/routes/faceAuth.routes.js";
 import uploadRoutes from "./src/routes/uploadRoutes.js";
 
+import networkLock from "./networkLock.js";
+
+dotenv.config();
 
 const app = express();
-app.use("/api", uploadRoutes);
-// ==========================
-// CORS
-// ==========================
+
+/* ==========================
+   FIX __dirname for ES Modules
+========================== */
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+/* ==========================
+   DEPLOY / PROXY SAFE
+========================== */
+
+app.set("trust proxy", true);
+
+/* ==========================
+   CORS
+========================== */
+
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-// ==========================
-// BODY PARSERS
-// ==========================
+/* ==========================
+   BODY PARSERS
+========================== */
+
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-// ==========================
-// DATABASE
-// ==========================
+/* ==========================
+   DATABASE
+========================== */
+
 connectDB();
 console.log("🔥 SERVER FILE LOADED");
 
-// ==========================
-// ROUTES
-// ==========================
+/* ==========================
+   NETWORK LOCK (LOGIN ONLY)
+========================== */
 
-// Auth routes
-app.use("/api/auth", authRoutes);
-
-// Admin routes
-app.use("/api/admin", adminRoutes);
-
-// ✅ Face attendance route (IMPORTANT CHANGE)
-app.use("/api", faceAuthRoutes);
-
-// ==========================
-// STATIC FILES
-// ==========================
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-
-// ==========================
-// TEST ROUTE (Optional Debug)
-// ==========================
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Server working" });
+app.use("/api/auth/login", (req, res, next) => {
+  console.log("✅ login middleware reached");
+  next();
 });
 
-// ==========================
-// SERVER START
-// ==========================
+app.use("/api/auth/login", networkLock);
+
+/* ==========================
+   ROUTES
+========================== */
+
+app.use("/api", uploadRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api", faceAuthRoutes);
+
+/* ==========================
+   STATIC FILES
+========================== */
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+/* ==========================
+   SERVE VITE FRONTEND
+========================== */
+
+/* ==========================
+   SERVE VITE FRONTEND
+========================== */
+
+const distPath = path.join(__dirname, "../dist");
+
+app.use(express.static(distPath));
+
+app.use((req, res) => {
+  res.sendFile(path.join(distPath, "index.html"));
+});
+
+/* ==========================
+   SERVER START
+========================== */
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
